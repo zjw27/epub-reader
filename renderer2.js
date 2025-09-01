@@ -1,3 +1,4 @@
+// test for chatGPT
 window.__restoring = false;
 (() => {
   if (window.__overlayOffsetWired) return;
@@ -300,7 +301,7 @@ window.addEventListener('DOMContentLoaded', () => {
       }
     }
   }
-  
+
   function setActive(idx) {
     if (idx === activeIdx) return;
     activeIdx = idx;
