@@ -1,0 +1,20 @@
+{
+  "name": "electron2",
+  "version": "0.0.1",
+  "private": true,
+  "main": "electron-main.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electronmon . --delay 2000",
+    "fix-electron": "node node_modules/.pnpm/electron@37.4.0/node_modules/electron/install.js"
+  },
+  "devDependencies": {
+    "electron": "37.4.0",
+    "electronmon": "^2.0.3"
+  },
+  "dependencies": {
+    "fast-xml-parser": "^4.3.2",
+    "jszip": "^3.10.1"
+  }
+}

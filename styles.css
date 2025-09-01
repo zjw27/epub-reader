@@ -1,0 +1,534 @@
+/* 浅色主题 */
+:root {
+    --bg: ##E0E0E0;
+    --panel: #f4f6f8;
+    --text: #111111;
+    --muted: #60666f;
+    --border: #e5e7eb;
+    --overlay-h: 36px;
+    /* 和 main.js 的 titleBarOverlay.height 对齐 */
+    --overlay-bg: #FAFAFB;
+    /* 浅色背景 */
+    --overlay-fg: #0F1115;
+    /* 标题/三键文字颜色 */
+    --overlay-muted: #3D3D3D;
+    /* 状态文字颜色 */
+    --overlay-border: #E9ECEF;
+    /* 底边线 */
+    --overlay-right-safe: 180px;
+    /* 右侧三键安全区（不够就加大） */
+    /* 选一种：↑轻一点=“卡片浮起”；↓深一点=“嵌入侧栏” */
+    --toc-bg: color-mix(in oklab, var(--bg) 92%, white 10%);
+    /* 浅一点 */
+    /* --toc-bg: color-mix(in oklab, var(--bg) 92%, black 8%); */
+    /* 深一点 */
+    /* --toc-sep: color-mix(in oklab, var(--toc-bg) 94%, black 6%); */
+    --toc-sep: rgba(0, 0, 0, .08);
+    /* 发丝分隔线 */
+    --sep-color: rgba(0, 0, 0, .10);
+    /* 发丝线颜色（浅色）*/
+    --toc-w: 260px;
+    --toc-fz: 15px;
+    /* 比正文略大一点 */
+    --toc-lh: 1.6;
+    --toc-xpad: 30px;
+    /* 左右内边距 */
+    --toc-ypad: 8px;
+    /* 上下内边距 */
+
+    --toc-fg: rgba(0, 0, 0, .92);
+    --toc-sep: rgba(0, 0, 0, .06);
+    /* 发丝分隔线 */
+    --rail-color: #3b82f6;
+    /* 左侧“导轨”强调色（主题色） */
+    --hover-bg: rgba(59, 130, 246, .06);
+    --active-bg: rgba(59, 130, 246, .10);
+    --toc-font: "Source Han Sans SC", "SF Pro Text", Arial, "PingFang SC", ui-sans-serif, system-ui,
+        "HarmonyOS Sans", "Segoe UI", Roboto,
+        "Noto Sans CJK SC",
+        "Helvetica Neue", sans-serif;
+}
+
+#overlay-ico {
+    width: 16px;
+    height: 16px;
+    /* 想更醒目可用 20px */
+    margin-right: 1px;
+    flex: 0 0 auto;
+    /* 不被压缩 */
+    -webkit-user-drag: none;
+    user-select: none;
+    pointer-events: none;
+    /* 只做装饰，不拦鼠标 */
+    image-rendering: -webkit-optimize-contrast;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0 !important;
+    background: var(--bg);
+    color: var(--text);
+    font-family: Segoe UI, system-ui, Roboto, Arial;
+}
+
+
+/* #overlay-bar {
+    position: fixed;
+    inset: 0 0 auto 0;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 120px 0 12px;
+    -webkit-app-region: drag;
+    user-select: none;
+    pointer-events: auto;
+    backdrop-filter: saturate(180%) blur(10px);
+} */
+
+/* 顶栏本体 */
+#overlay-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--overlay-h);
+    background: var(--overlay-bg) !important;
+    color: var(--overlay-fg);
+    border-bottom: 1px solid var(--overlay-border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 var(--overlay-right-safe) 0 12px;
+    z-index: 2147483647;
+    -webkit-app-region: drag;
+    user-select: none;
+}
+
+
+/* 书名 — 章节（左） */
+#overlay-title {
+    max-width: 66vw;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 500;
+    opacity: .92;
+    font-size: 12px;
+}
+
+#overlay-bar .spacer {
+    flex: 1;
+}
+
+@keyframes overlay-pulse-fade {
+
+    0%,
+    100% {
+        opacity: .45
+    }
+
+    50% {
+        opacity: 1
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --toc-fg: rgba(255, 255, 255, .90);
+        --toc-sep: rgba(255, 255, 255, .08);
+        --hover-bg: rgba(255, 255, 255, .06);
+        --active-bg: rgba(255, 255, 255, .10);
+        --rail-color: #8ab4ff;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        /* 深色里反过来：再往黑混 8–12% 更自然 */
+        --toc-bg: color-mix(in oklab, var(--bg) 88%, black 12%);
+        --toc-sep: color-mix(in oklab, var(--toc-bg) 90%, white 10%);
+    }
+}
+
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --toc-color: rgba(255, 255, 255, .90);
+    }
+}
+
+
+header {
+    height: 56px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 16px;
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+}
+
+/* 状态条靠最右 */
+#overlay-status,
+#status.status {
+    margin-left: auto;
+    font-size: 12px;
+    color: #666;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    pointer-events: none;
+    /* 不挡点击 */
+}
+
+/* 现代浅色那套里，替换/追加这些 */
+#overlay-status {
+    margin-left: auto;
+    /* 关键：一行显示 + 不收缩 */
+    white-space: nowrap;
+    flex: 0 0 auto;
+    /* 不参与 flex 收缩 */
+    max-width: 40vw;
+    /* 保险起见给个上限 */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 18px;
+    line-height: 18px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    -webkit-app-region: no-drag;
+    color: var(--overlay-muted);
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg)
+    }
+}
+
+
+button {
+    padding: 6px 12px;
+    background: #ffffff;
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #fafafa;
+}
+
+.title {
+    font-weight: 500;
+    opacity: .85;
+}
+
+main {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    height: calc(100% - 56px);
+    padding-top: var(--overlay-h);
+}
+
+aside {
+    border-right: 1px solid var(--border);
+    overflow: auto;
+    background: #fafafa;
+}
+
+article {
+    overflow: auto;
+    padding: 24px 28px;
+    line-height: 1.8;
+}
+
+article h1,
+article h2,
+article h3 {
+    margin: 1.2em 0 .6em;
+}
+
+article p {
+    margin: .8em 0;
+}
+
+.empty {
+    color: var(--muted);
+}
+
+.pad {
+    padding: 12px 14px;
+}
+
+/* 目录项 */
+.chap {
+    padding: 10px 14px;
+    border-bottom: 1px dashed var(--border);
+    cursor: pointer;
+    color: #444;
+}
+
+.chap:hover {
+    background: #f0f2f5;
+    color: #000;
+}
+
+.chap.active {
+    background: #e9eef5;
+    color: #000;
+}
+
+#bookTitle {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* 图片适配：不溢出，保真比例，局中 */
+article img,
+image,
+svg {
+    display: block;
+    /* 去掉底部空隙 */
+    max-width: 100%;
+    /* 宽度不超过容器 */
+    max-height: 100%;
+    /* 高度不超过容器（如果你有固定高度） */
+    width: auto;
+    /* 按比例缩放 */
+    height: auto;
+    margin: 0 auto;
+    /* 居中显示 */
+    object-fit: contain;
+    overflow-clip-margin: content;
+}
+
+/* 连续阅读：每章的视觉分隔与标题条 */
+.chapter {
+    padding-bottom: 24px;
+}
+
+.chapter-marker {
+    margin: 24px 0 16px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    font-weight: 600;
+    font-size: 1.125rem;
+    color: #222;
+}
+
+/* 目录区强制左对齐，避免被书内 CSS 影响成两端对齐 */
+#toc,
+#toc .chap {
+    text-align: left !important;
+    text-justify: auto !important;
+    letter-spacing: normal !important;
+    word-spacing: normal !important;
+    text-align-last: auto !important;
+    white-space: nowrap !important;
+    /* overflow: hidden !important; */
+    text-overflow: ellipsis !important;
+}
+
+/* 1) 目录容器仍居中，但文本一律左对齐、横向排布 */
+#toc {
+    width: var(--toc-w);
+    margin: 0;
+    color: var(--toc-fg);
+    writing-mode: horizontal-tb !important;
+    text-orientation: mixed !important;
+    border-right: 1px solid var(--toc-sep);
+    /* border-right: none !important; */
+    /* 去掉整列边框 */
+    box-shadow: inset -1px 0 var(--toc-sep);
+    /* 右侧内阴影=发丝分隔线 */
+    max-height: 100%;
+    background: var(--toc-bg);
+    font-family: var(--toc-font) !important;
+}
+
+#toc .chap {
+    position: relative;
+    display: block;
+    padding: var(--toc-ypad) var(--toc-xpad);
+    font-size: var(--toc-fz);
+    line-height: var(--toc-lh);
+    letter-spacing: .2px;
+    text-align: left;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    transition: background .16s ease, color .16s ease;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+/* 邻接发丝分隔（很轻，不突兀） */
+#toc .chap {
+    position: relative;
+}
+
+/* 左侧“黏着感”强调条：hover/active 都有，但很克制 */
+#toc .chap::before {
+    content: "";
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    top: 0;
+    height: 1px;
+    background: rgba(0, 0, 0, .06);
+    /* 发丝线 */
+    transform: scaleY(.5);
+    /* 视觉 0.5px，更柔 */
+    pointer-events: none;
+    transition: width .18s ease, background .18s ease;
+}
+
+/* ③ hover/active 只用“轻底色 + 左侧细轨”，不再围出矩形 */
+#toc .chap:hover {
+    background: rgba(59, 130, 246, .06) !important;
+}
+
+#toc .chap.active {
+    background: rgba(59, 130, 246, .10) !important;
+    font-weight: 600;
+}
+
+#toc .chap::before {
+    /* 左侧细轨，默认透明 */
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 2px;
+    background: transparent;
+    transition: width .18s, background .18s;
+}
+
+#toc .chap:hover::before,
+#toc .chap.active::before {
+    background: #3b82f6;
+    width: 3px;
+}
+
+#toc .chap+.chap::before {
+    content: "";
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    top: 0;
+    height: 1px;
+    background: var(--toc-sep);
+    transform: scaleY(.5);
+    /* 视觉上更细（Retina 看起来像 0.5px） */
+    transform-origin: top;
+    pointer-events: none;
+}
+
+/* 兜底：防书内样式把目录弄成竖排 */
+#toc * {
+    writing-mode: horizontal-tb !important;
+    text-orientation: mixed !important;
+}
+
+
+.reader-main,
+.reader-main * {
+    font-family: "Source Han Sans SC", "Microsoft YaHei UI", "Segoe UI",
+        system-ui, -apple-system, "Noto Sans CJK SC", "PingFang SC",
+        "Hiragino Sans GB", "Helvetica Neue", Arial, sans-serif !important;
+}
+
+/* 取消容器的滚动条占位 */
+#container,
+#toc {
+    overflow-y: auto;
+    position: relative;
+}
+
+
+/* 隐藏默认滚动条 */
+#toc::-webkit-scrollbar {
+    width: 0px;
+    /* 垂直滚动条宽度设为 0 */
+    height: 0px;
+    /* 水平滚动条高度设为 0 */
+    z-index: 9999;
+}
+
+/* 滚动条轨道 */
+#container::-webkit-scrollbar-track,
+#toc::-webkit-scrollbar-track {
+    background: transparent;
+    /* 隐藏轨道背景 */
+}
+
+/* 滚动条滑块 */
+#container::-webkit-scrollbar-thumb,
+#toc::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.5);
+    /* 滚动条的颜色 */
+    border-radius: 10px;
+    /* 滚动条圆角 */
+    z-index: 9999;
+    /* 确保滚动条位于其他元素之上 */
+}
+
+/* 当滚动条被拖动时 */
+#container::-webkit-scrollbar-thumb:hover,
+#toc::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+    /* 滚动条被拖动时的颜色 */
+}
+
+/* 章与章之间的节奏 */
+#content .chapter .chapter-marker {
+    position: relative;
+    margin: var(--sep-gap) 0 calc(var(--sep-gap) * 1.25);
+    height: 0;
+    /* 只占留白，不撑高内容 */
+}
+
+/* 0.5px 观感的中心淡入淡出横线 */
+#content .chapter .chapter-marker::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 1px;
+    /* background: linear-gradient(90deg, transparent 0, var(--sep-color) 15%,
+            var(--sep-color) 85%, transparent 100%); */
+    background-color: #000;
+    transform: scaleY(.5);
+    /* 视觉 0.5px（Retina 友好） */
+    transform-origin: top;
+    pointer-events: none;
+}
+
+/* 第一章不显示分隔（避免页面最顶多一道线） */
+#content .chapter:first-child .chapter-marker {
+    display: none;
+}
+
+/* body 加 .sep-space 即可全站启用纯留白 */
+body.sep-space #content .chapter .chapter-marker::before {
+    display: none;
+}
+
+#content h2 *, p {
+    font-family: var(--toc-font) !important;
+}
+
+
+
+/* 只把线隐去，保留留白节奏 */
+:root {
+    --sep-color: transparent;
+}
